@@ -51,5 +51,7 @@ class PhoneBook {
 
 std::string	getUserInfo(std::string msg);
 void		print_user_info(std::string str);
+void		printUserData(Contact contact, int index);
+void		printTableHeader();
 
 # endif

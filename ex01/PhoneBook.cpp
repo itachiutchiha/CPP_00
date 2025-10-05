@@ -15,6 +15,7 @@
 PhoneBook::PhoneBook()
 {
 	isFull = 0;
+	index = 0;
 }
 
 int	PhoneBook::getFullVar()
@@ -62,78 +63,55 @@ void	PhoneBook::exit()
 }
 void	PhoneBook::search()
 {
-		std::string input;
-		if (this->getIndex() == 0 && this->getFullVar() == 0)
-			std::cout << "THE PHONEBOOK IS EMPTY\n";
+	std::string	input;
+	int			contactNumber;
+	int			j;
+	int			stop;
+
+	if (this->getIndex() == 0 && this->getFullVar() == 0)
+		std::cout << "THE PHONEBOOK IS EMPTY\n";
+	else
+	{
+		printTableHeader();
+		if (this->getFullVar() == 1)
+			contactNumber = 8;
 		else
+			contactNumber = this->getIndex();
+		for (int i = 0; i < contactNumber; i++)
 		{
-			std::cout << " ----- | --------------- | --------------- | --------------- | --------------- | --------------- |\n";
-			std::cout << " index | first name      | last name       | nick name       | phone number    | scret           |\n";
-			if (this->getFullVar())
+			std::cout << "|----------|----------|----------|----------|----------|----------|\n";
+			printUserData(this->contacts[i], i+1);
+		}
+		stop = 0;
+		do{
+			std::cout << "ENTER AN INDEX BETWEEN";
+			if (this->getFullVar() == 1)
+				std::cout << "(1 -> 8), IF YOU WANT TO GO BACK PRESS (EXIT): ";
+			else
+				std ::cout << "(1 -> " << this->getIndex()<< "), IF YOU WANT TO GO BACK PRESS (EXIT): ";
+			if (!std::getline(std::cin, input))
 			{
-				for (int i = 0; i < 8; i++)
-				{
-					std::cout << " ----- | --------------- | --------------- | --------------- | --------------- | --------------- |\n";
-					std::cout << "   " << i+1 << "   ";
-					print_user_info(this->contacts[i].getFirstName());
-					print_user_info(this->contacts[i].getLastName());
-					print_user_info(this->contacts[i].getNickName());
-					print_user_info(this->contacts[i].getPhoneNumber());
-					print_user_info(this->contacts[i].getSecret());
-					std::cout << "|\n";
-				}
+				std::cout << "\n";
+				std::exit(0);
 			}
+			if (input == "EXIT")
+				break ;
+			if (input.length() != 1)
+				std::cout << "INVALID INDEX\n";
 			else
 			{
-				for (int i = 0; i < this->getIndex(); i++)
-				{
-					std::cout << " ----- | --------------- | --------------- | --------------- | --------------- | --------------- |\n";
-					std::cout << "   " << i+1 << "   ";
-					print_user_info(this->contacts[i].getFirstName());
-					print_user_info(this->contacts[i].getLastName());
-					print_user_info(this->contacts[i].getNickName());
-					print_user_info(this->contacts[i].getPhoneNumber());
-					print_user_info(this->contacts[i].getSecret());
-					std::cout << "|\n";
-				}
-			}
-			int j;
-			int stop = 0;
-			do{
-				std::cout << "ENTER AN INDEX BETWEEN";
-				if (this->getFullVar() == 1)
-					std::cout << "(1 -> 8), IF YOU WANT TO GO BACK PRESS (EXIT): ";
-				else
-					std ::cout << "(1 -> " << this->getIndex()<< "), IF YOU WANT TO GO BACK PRESS (EXIT): ";
-				if (!std::getline(std::cin, input))
-				{
-					std::cout << "\n";
-					std::exit(0);
-				}
-				if (input == "EXIT")
-					break ;
-				if (input.length() != 1)
+				j = input[0] - 48;
+				if (j <= 0 || (j > this->getIndex() && this->getFullVar() == 0) || (this->getFullVar() == 1 && j > 8))
 					std::cout << "INVALID INDEX\n";
 				else
-				{
-					j = input[0] - 48;
-					if (j <= 0 || (j > this->getIndex() && this->getFullVar() == 0) || (this->getFullVar() == 1 && j > 8))
-						std::cout << "INVALID INDEX\n";
-					else
-						stop = 1;
-				}
-			}while(!stop);
-			if (stop == 1)
-			{
-				std::cout << " ----- | --------------- | --------------- | --------------- | --------------- | --------------- |\n";
-				std::cout << " index | first name      | last name       | nick name       | phone number    | scret           |\n";
-				std::cout << "   " << j << "   ";
-				print_user_info(this->contacts[j-1].getFirstName());
-				print_user_info(this->contacts[j-1].getLastName());
-				print_user_info(this->contacts[j-1].getNickName());
-				print_user_info(this->contacts[j-1].getPhoneNumber());
-				print_user_info(this->contacts[j-1].getSecret());
-				std::cout << "|\n";
+					stop = 1;
 			}
+		}while(!stop);
+		if (stop == 1)
+		{
+			printTableHeader();
+			std::cout << "|----------|----------|----------|----------|----------|----------|\n";
+			printUserData(this->contacts[j-1], j);
 		}
+	}
 }
